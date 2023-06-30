@@ -5,19 +5,61 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <head>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+      <!-- <style>
+        .customTextBold14 {
+          font-family: "Montserrat", sans-serif;
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .customTextBold16 {
+          font-family: "Montserrat", sans-serif;
+          font-size: 16px;
+          font-weight: bold;
+        }
+
+        .customTextBold22 {
+          font-family: "Montserrat", sans-serif;
+          font-size: 22px;
+          font-weight: bold;
+        }
+
+        .customTextBold45 {
+          font-family: "Montserrat", sans-serif;
+          font-size: 45px;
+          font-weight: bold;
+        }
+
+        .customText40012 {
+          font-family: "Montserrat", sans-serif;
+          font-size: 12px;
+          font-weight: 400;
+        }
+
+        .customText40014 {
+          font-family: "Montserrat", sans-serif;
+          font-size: 14px;
+          font-weight: 400;
+        }
+      </style> -->
+    </head>
     <link rel="icon" type="image/png" href="./img/favicon.png" />
     <title>CV - Victor Kurchenko</title>
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <!-- wrapper -->
-    <div class="wrapper">
+    <div class="wrapper" id="content">
       <!-- left panel -->
       <aside class="sidebar">
         <img
@@ -113,6 +155,61 @@
               <span class="language-list-text">English - intermediate</span>
             </li>
           </ul>
+        </div>
+        <!-- save2pdf -->
+        <div class="button-save2pdf" id="save-pdf-button">
+          <button onclick="generatePDF()">Save to PDF</button>
+          <script>
+            function generatePDF() {
+              var contentElement = document.getElementById("content");
+
+              var docDefinition = {
+                content: getContent(contentElement),
+                styles: {
+                  // Розділ визначення шрифтів
+                  fonts: {
+                    Montserrat: {
+                      normal: "./fonts/Montserrat-Bold.ttf", // Шлях до шрифту Montserrat з властивостями "700 22px / 27px"
+                      bold: "./fonts/Montserrat-Bold.ttf",
+                    },
+                  },
+                },
+              };
+
+              var pdfDocGenerator = pdfMake.createPdf(docDefinition);
+              pdfDocGenerator.download("cv.pdf");
+            }
+            function getContent(element) {
+              var content = [];
+
+              for (var i = 0; i < element.childNodes.length; i++) {
+                var node = element.childNodes[i];
+
+                if (node.nodeType === Node.TEXT_NODE) {
+                  // Обробка текстового вмісту
+                  var text = node.textContent.trim();
+                  if (text !== "") {
+                    content.push({
+                      text: text,
+                      style: getComputedStyle(node.parentNode),
+                    });
+                  }
+                } else if (
+                  node.nodeType === Node.ELEMENT_NODE &&
+                  node.tagName !== "SCRIPT"
+                ) {
+                  // Обробка елементів (крім тегу <script>)
+                  var elementContent = getContent(node);
+
+                  if (elementContent.length > 0) {
+                    content.push(elementContent);
+                  }
+                }
+              }
+
+              return content;
+            }
+          </script>
         </div>
       </aside>
       <!-- main content -->
