@@ -162,22 +162,21 @@
           <script>
             function generatePDF() {
               var contentElement = document.getElementById("content");
-
+              var styles = {
+                fonts: {
+                  Montserrat: {
+                    normal: "/fonts/Montserrat-Regular.ttf",
+                    bold: "/fonts/Montserrat-Bold.ttf"
+                  }
+                }
+              };
               var docDefinition = {
                 content: getContent(contentElement),
-                styles: {
-                  // Розділ визначення шрифтів
-                  fonts: {
-                    Montserrat: {
-                      normal: "./fonts/Montserrat-Bold.ttf", // Шлях до шрифту Montserrat з властивостями "700 22px / 27px"
-                      bold: "./fonts/Montserrat-Bold.ttf",
-                    },
-                  },
-                },
+                styles: styles
               };
 
-              var pdfDocGenerator = pdfMake.createPdf(docDefinition);
-              pdfDocGenerator.download("cv.pdf");
+              var pdfDocGenerator = pdfMake.createPdf(docDefinition).open();
+              // pdfDocGenerator.download("cv.pdf");
             }
             function getContent(element) {
               var content = [];
@@ -190,8 +189,8 @@
                   var text = node.textContent.trim();
                   if (text !== "") {
                     content.push({
-                      text: text,
-                      style: getComputedStyle(node.parentNode),
+                      text: text
+                      // style: getComputedStyle(node.parentNode)
                     });
                   }
                 } else if (
